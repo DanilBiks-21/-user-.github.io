@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Asset Manager</title>
+  
+  <style>
+       .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-icon {
+    cursor: pointer;
+  }
+
+  .tooltip-content {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .tooltip-content.show {
+    opacity: 1;
+    max-height: 1000px;
+    transition: opacity 0.3s ease-in-out, max-height 0.5s ease-in-out;
+  }
+
+  .tooltip-content h3 {
+    font-size: 18px;
+    margin-top: 0;
+    color: #333;
+  }
+
+  .tooltip-content p {
+    margin-bottom: 10px;
+    color: #555;
+  }
+
+  .tooltip-content ol {
+    margin: 0;
+    padding-left: 20px;
+    color: #555;
+  }
+
+  .language-selection {
+    margin-top: 10px;
+  }
+
+  .language-selection label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .language-selection select {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f7f7f7;
+      opacity: 0;
+      animation: fadeIn 1s;
+      animation-fill-mode: forwards;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-container label {
+      display: inline-block;
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="number"] {
+      width: 200px;
+      padding: 5px;
+    }
+
+    .form-container button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form-container button:hover {
+      background-color: #45a049;
+    }
+
+    #assetsTable {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+
+    #assetsTable th,
+    #assetsTable td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    #assetsTable th {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+
+    #assetsTable tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .btnDelete {
+      padding: 5px 10px;
+      background-color: #f44336;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btnDelete:hover {
+      background-color: #d32f2f;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>Asset Manager</h1>
+  
+  <div class="tooltip-container">
+    <span class="tooltip-icon" onclick="toggleInstructions()">ℹ️</span>
+    <div class="tooltip-content" id="instructions">
+      <h3>Instructions</h3>
+      <div id="english-instructions">
+        <p>Welcome to the Asset Manager program! This program allows you to manage assets and store information about them. Please familiarize yourself with the following instructions:</p>
+        <ol>
+          <li>Adding an Asset: Enter the asset name in the "Asset Name" field. Specify ratings from 0 to 100 for each of the three experts in the "Expert 1", "Expert 2", and "Expert 3" fields. Click the "Add Asset" button to add the asset.</li>
+          <li>Viewing Assets: The "Assets Table" will display all the added assets along with their IDs, names, average values, and maximum ratings.</li>
+          <li>Deleting an Asset: Each row in the table has a "Delete" button that allows you to delete the corresponding asset.</li>
+          <li>Clearing Assets: Click the "Clear Assets" button to remove all assets from the database.</li>
+          <li>Resetting the Database: If you want to reset the asset database to its initial state, click the "Reset Database" button.</li>
+        </ol>
+        <p>Thank you for using the Asset Manager program! If you have any questions, please contact our support team.</p>
+      </div>
+      <div id="ukrainian-instructions">
+        <p>Ласкаво просимо до програми Asset Manager! Ця програма дозволяє вам керувати активами і зберігати відомості про них. Ознайомтеся з наступними інструкціями:</p>
+        <ol>
+          <li>Додавання активу: Введіть назву активу у поле "Назва активу". Вкажіть оцінки від 0 до 100 для кожного з трьох експертів у полях "Експерт 1", "Експерт 2" та "Експерт 3". Натисніть кнопку "Додати актив", щоб додати актив.</li>
+          <li>Перегляд активів: У "Таблиці активів" відображатимуться всі додані активи разом з їх ідентифікаторами, назвами, середніми значеннями та максимальними оцінками.</li>
+          <li>Видалення активу: Кожний рядок у таблиці має кнопку "Видалити", яка дозволяє видалити відповідний актив.</li>
+          <li>Очищення активів: Натисніть кнопку "Очистити активи", щоб видалити всі активи з бази даних.</li>
+          <li>Скидання бази даних: Якщо ви хочете скинути базу даних активів до початкового стану, натисніть кнопку "Скинути базу даних".</li>
+        </ol>
+        <p>Дякуємо, що використовуєте програму Asset Manager! Якщо у вас виникли питання, будь ласка, зверніться до нашої підтримки.</p>
+      </div>
+      <div class="language-selection">
+        <label for="language">Select Language:</label>
+        <select id="language" onchange="toggleLanguage()">
+          <option value="english">English</option>
+          <option value="ukrainian">Українська</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-container">
+    <label for="name">Asset Name:</label>
+    <input type="text" id="name">
+    <br>
+    <label for="expert1">Expert 1:</label>
+    <input type="number" id="expert1" min="0" max="100">
+    <br>
+    <label for="expert2">Expert 2:</label>
+    <input type="number" id="expert2" min="0" max="100">
+    <br>
+    <label for="expert3">Expert 3:</label>
+    <input type="number" id="expert3" min="0" max="100">
+    <br>
+    <button id="btnAddAsset">Add Asset</button>
+    <button id="btnClearAssets">Clear Assets</button>
+    <button id="btnResetDatabase">Reset Database</button>
+  </div>
+
+  <table id="assetsTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Max Expert Rating</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Table rows will be dynamically added here -->
+    </tbody>
+  </table>
+  
+
+
+  <script>
+      function toggleInstructions() {
+    var instructions = document.getElementById("instructions");
+    instructions.classList.toggle("show");
+  }
+
+  function toggleLanguage() {
+    var language = document.getElementById("language").value;
+    var englishInstructions = document.getElementById("english-instructions");
+    var ukrainianInstructions = document.getElementById("ukrainian-instructions");
+
+    if (language === "english") {
+      englishInstructions.style.display = "block";
+      ukrainianInstructions.style.display = "none";
+    } else if (language === "ukrainian") {
+      englishInstructions.style.display = "none";
+      ukrainianInstructions.style.display = "block";
+    }
+  }
+  
+     var db = openDatabase('assetsQuantity.db', '1.0', 'Asset Database', 2 * 1024 * 1024);
+
+db.transaction(function(tx) {
+  tx.executeSql('CREATE TABLE IF NOT EXISTS Assets (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, value REAL, maxExpertRating INTEGER)');
+});
+    var db = openDatabase('assets1.db', '1.0', 'Asset Database', 2 * 1024 * 1024);
+
+    db.transaction(function(tx) {
+      tx.executeSql('CREATE TABLE IF NOT EXISTS Assets (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, averageValue REAL, maxRating INTEGER)');
+    });
+
+    function insertAsset() {
+      var name = document.getElementById("name").value;
+      var expert1 = parseInt(document.getElementById("expert1").value);
+      var expert2 = parseInt(document.getElementById("expert2").value);
+      var expert3 = parseInt(document.getElementById("expert3").value);
+
+      if (expert1 < 0 || expert1 > 100 || expert2 < 0 || expert2 > 100 || expert3 < 0 || expert3 > 100) {
+        alert("Оцінки повинні бути у проміжку від 0 до 100.");
+        return;
+      }
+
+      var averageValue = Math.round((expert1 + expert2 + expert3) / 3);
+      var maxRating = Math.max(expert1, expert2, expert3);
+
+      db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO Assets (name, averageValue, maxRating) VALUES (?, ?, ?)', [name, averageValue, maxRating], function(tx, result) {
+          document.getElementById("name").value = "";
+          document.getElementById("expert1").value = "";
+          document.getElementById("expert2").value = "";
+          document.getElementById("expert3").value = "";
+
+          loadAssets();
+        }, function(tx, error) {
+          console.log('Insert error: ' + error.message);
+        });
+      });
+    }
+
+    function deleteAsset(id) {
+      db.transaction(function(tx) {
+        tx.executeSql('DELETE FROM Assets WHERE id = ?', [id], function(tx, result) {
+          loadAssets();
+        }, function(tx, error) {
+          console.log('Delete error: ' + error.message);
+        });
+      });
+    }
+
+    function clearAssets() {
+      if (confirm("Are you sure you want to clear all assets?")) {
+        db.transaction(function(tx) {
+          tx.executeSql('DELETE FROM Assets', [], function(tx, result) {
+            loadAssets();
+          }, function(tx, error) {
+            console.log('Clear error: ' + error.message);
+          });
+        });
+      }
+    }
+
+    function resetDatabase() {
+  if (confirm("Are you sure you want to reset the database? This action cannot be undone.")) {
+    db.transaction(function(tx) {
+      tx.executeSql('DROP TABLE IF EXISTS Assets', [], function(tx, result) {
+        console.log('Database reset successful.');
+        // Створення таблиці знову
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Assets (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, averageValue REAL, maxRating INTEGER)', [], function(tx, result) {
+          console.log('Table re-created successfully.');
+          loadAssets();
+        }, function(tx, error) {
+          console.log('Table creation error: ' + error.message);
+        });
+      }, function(tx, error) {
+        console.log('Database reset error: ' + error.message);
+      });
+    });
+  }
+}
+    
+
+    function loadAssets() {
+      db.transaction(function(tx) {
+        tx.executeSql('SELECT * FROM Assets ORDER BY averageValue DESC', [], function(tx, result) {
+          var tableBody = document.querySelector('#assetsTable tbody');
+          tableBody.innerHTML = '';
+
+          for (var i = 0; i < result.rows.length; i++) {
+            var row = result.rows.item(i);
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = '<td>' + row.id + '</td><td>' + row.name + '</td><td>' + row.averageValue + '</td><td>' + row.maxRating + '</td><td><button class="btnDelete" data-id="' + row.id + '">Delete</button></td>';
+            tableBody.appendChild(newRow);
+          }
+
+          var deleteButtons = document.querySelectorAll('.btnDelete');
+          deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+              var assetId = event.target.getAttribute('data-id');
+              deleteAsset(assetId);
+            });
+          });
+        }, function(tx, error) {
+          console.log('Select error: ' + error.message);
+        });
+      });
+    }
+
+    document.getElementById("btnAddAsset").addEventListener("click", insertAsset);
+    document.getElementById("btnClearAssets").addEventListener("click", clearAssets);
+    document.getElementById("btnResetDatabase").addEventListener("click", resetDatabase);
+
+    loadAssets();
+  </script>
+</body>
+</html>
